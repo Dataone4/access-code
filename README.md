@@ -1,28 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Secure Link Access</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="container">
-    <h1>This Link is Protected</h1>
-    <p>Please enter your email and a code will be sent to your email. Enter the code below.</p>
-    
-    <form id="accessForm">
-      <input type="email" id="email" placeholder="Enter your email" required />
-      <button type="submit">Access Link</button>
-    </form>
-    
-    <div id="codeInput" style="display: none;">
-      <input type="text" id="verificationCode" placeholder="Enter verification code" required />
-      <button onclick="verifyCode()">Verify Code</button>
-    </div>
-    
-    <div id="message"></div>
-  </div>
-  <script src="script.js"></script>
-</body>
-</html>
+// /api/send-verification-email.js
+import resend from './resend'; // import the Resend setup
+
+export default async function handler(req, res) {
+    if (req.method === 'POST') {
+        const { email } = req.body;
+
+        try {
+            // Send verification code using Resend API
+            await resend.sendEmail({
+                to: email,
+                subject: 'Verification Code',
+                text: 'Your verification code is: 123456', // you can generate a random code
+            });
+
+            return res.status(200).json({ success: true });
+        } catch (error) {
+            console.error('Error sending email:', error);
+            return res.status(500).json({ success: false, message: 'Failed to send email' });
+        }
+    }
+}
