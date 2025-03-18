@@ -158,12 +158,25 @@
     sendCodeBtn.addEventListener('click', function() {
       const email = emailInput.value;
       if (email) {
-        // Here you would call the backend to send the code
-        alert('Verification code sent to ' + email); // Simulate sending the code
-
-        // Show the code input and verify button
-        codeInputGroup.style.display = 'block';
-        verifyCodeBtn.style.display = 'block';
+        // Make an API call to your backend to send the code
+        fetch('http://localhost:3000/send-verification-email', { // Replace with your backend URL
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Verification code sent to ' + email); // Simulate sending the code
+            codeInputGroup.style.display = 'block';
+            verifyCodeBtn.style.display = 'block';
+          } else {
+            alert('Email not whitelisted or error.');
+          }
+        })
+        .catch(error => {
+          alert('There was an error sending the verification code. Please try again later.');
+        });
       } else {
         alert('Please enter a valid email.');
       }
@@ -171,10 +184,26 @@
 
     verifyCodeBtn.addEventListener('click', function() {
       const code = codeInput.value;
-      if (code === '123456') {  // Example code, replace with real logic
-        resultContainer.style.display = 'block';
+      if (code) {
+        // Verify the code with backend API
+        fetch('http://localhost:3000/verify-code', { // Replace with your backend URL
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            resultContainer.style.display = 'block';
+          } else {
+            alert('Invalid verification code. Please try again.');
+          }
+        })
+        .catch(error => {
+          alert('There was an error verifying the code. Please try again later.');
+        });
       } else {
-        alert('Invalid code. Please try again.');
+        alert('Please enter the verification code.');
       }
     });
   </script>
