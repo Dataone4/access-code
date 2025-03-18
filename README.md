@@ -52,7 +52,7 @@
 
     h3 {
       color: var(--primary);
-      font-size: 18px;
+      font-size: 14px;
       text-align: center;
       margin-bottom: 30px;
       font-weight: 600; /* Montserrat Semi-Bold */
