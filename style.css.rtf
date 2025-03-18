@@ -5,110 +5,110 @@
 \paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 
-\f0\fs24 \cf0 /* General Body Styling */\
+\f0\fs24 \cf0 :root \{\
+  --primary: #271b0c; /* Brown color for text and buttons */\
+  --primary-hover: #b02125; /* Hover color for buttons */\
+  --background: #f2f2f2; /* Light grey background */\
+  --card-bg: #ffffff; /* White background for the form */\
+  --text: #333333; /* Dark text color */\
+  --border-radius: 12px; /* Rounded corners */\
+\}\
+\
+* \{\
+  box-sizing: border-box;\
+  margin: 0;\
+  padding: 0;\
+\}\
+\
 body \{\
-    font-family: 'Montserrat', sans-serif; /* Montserrat font */\
-    background-color: #f4f4f4; /* Light background color */\
-    display: flex;\
-    justify-content: center;\
-    align-items: center;\
-    height: 100vh;\
-    margin: 0;\
-    color: #333;\
+  font-family: 'Montserrat', sans-serif;\
+  background: var(--background);\
+  color: var(--text);\
+  padding: 20px;\
+  line-height: 1.6;\
+  min-height: 100vh;\
+  display: flex;\
+  align-items: center;\
+  justify-content: center;\
 \}\
 \
-/* Container for the entire page */\
-.container \{\
-    background-color: #fff; /* White background for the main box */\
-    border-radius: 10px; /* Rounded corners */\
-    padding: 40px;\
-    width: 100%;\
-    max-width: 400px;\
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow */\
-    text-align: center;\
+.verification-container \{\
+  width: 100%;\
+  max-width: 500px;\
+  background: var(--card-bg);\
+  padding: 30px;\
+  border-radius: var(--border-radius);\
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);\
+  border: 2px solid var(--primary); /* Border around the container */\
 \}\
 \
-/* Title Styling */\
-h1 \{\
-    font-size: 24px;\
-    color: #000;\
-    font-weight: bold;\
-\}\
-\
-/* Subtitle Styling */\
 h2 \{\
-    font-size: 16px;\
-    color: #666;\
-    margin-top: 10px;\
-    margin-bottom: 20px;\
+  margin-bottom: 20px;\
+  color: var(--primary); /* Brown text */\
+  text-align: center;\
 \}\
 \
-/* Form container to align input and button */\
-.form-container \{\
-    display: flex;\
-    flex-direction: column;\
-    align-items: center;\
-    gap: 20px;\
+.input-group \{\
+  margin-bottom: 20px;\
 \}\
 \
-/* Input Styling */\
+label \{\
+  display: block;\
+  margin-bottom: 8px;\
+  font-weight: 500;\
+\}\
+\
 input[type="email"], input[type="text"] \{\
-    width: 80%;\
-    padding: 12px;\
-    font-size: 16px;\
-    border: 2px solid #ccc;\
-    border-radius: 8px; /* Rounded input */\
-    margin-bottom: 10px;\
-    outline: none;\
+  width: 100%;\
+  padding: 10px;\
+  border: 1px solid #ddd;\
+  border-radius: 6px;\
+  font-family: inherit;\
+  margin-bottom: 15px;\
 \}\
 \
-/* Input focus styling */\
-input[type="email"]:focus, input[type="text"]:focus \{\
-    border-color: #4CAF50;\
-    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);\
-\}\
-\
-/* Button Styling */\
 button \{\
-    padding: 12px 24px;\
-    font-size: 16px;\
-    color: #fff;\
-    background-color: #4CAF50; /* Green background */\
-    border: none;\
-    border-radius: 8px; /* Rounded button */\
-    cursor: pointer;\
-    transition: background-color 0.3s ease;\
+  display: block;\
+  width: 100%;\
+  padding: 12px 20px;\
+  background-color: var(--primary);\
+  color: #fff;\
+  border: none;\
+  border-radius: 30px;\
+  cursor: pointer;\
+  transition: background-color 0.3s ease;\
+  font-family: inherit;\
+  font-weight: 600;\
+  font-size: 16px;\
+  margin: 20px 0;\
 \}\
 \
-/* Button hover effect */\
 button:hover \{\
-    background-color: #45a049; /* Darker green when hovered */\
+  background-color: var(--primary-hover);\
 \}\
 \
-/* Hide the form for the code input initially */\
-#code-form \{\
-    display: none;\
+.result \{\
+  background-color: #f5f5f5;\
+  padding: 15px;\
+  border-radius: 8px;\
+  margin-top: 20px;\
+  display: none;\
 \}\
 \
-/* Access button container hidden initially */\
-#access-button-container \{\
-    display: none;\
+.result.active \{\
+  display: block;\
 \}\
 \
-/* Button Styling for "Get Access" */\
-#access-button \{\
-    padding: 12px 24px;\
-    font-size: 16px;\
-    color: #fff;\
-    background-color: #008CBA; /* Blue background for access button */\
-    border: none;\
-    border-radius: 8px;\
-    cursor: pointer;\
-    transition: background-color 0.3s ease;\
+.result-value \{\
+  font-size: 24px;\
+  font-weight: 600;\
+  color: var(--primary);\
+  margin: 10px 0;\
 \}\
 \
-/* Hover effect for the "Get Access" button */\
-#access-button:hover \{\
-    background-color: #007bb5; /* Darker blue when hovered */\
+@media (max-width: 600px) \{\
+  .verification-container \{\
+    padding: 20px;\
+  \}\
 \}\
 }
