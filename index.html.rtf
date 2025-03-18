@@ -1,59 +1,128 @@
 {\rtf1\ansi\ansicpg1252\cocoartf2758
-\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\froman\fcharset0 Times-Roman;}
-{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
-{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;}
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
 \paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 
 \f0\fs24 \cf0 <!DOCTYPE html>\
 <html lang="en">\
 <head>\
-    <meta charset="UTF-8">\
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">\
-    <title>Access Code Verification</title>\
-    <style>\
-        body \{\
-            font-family: Arial, sans-serif;\
-            text-align: center;\
-            padding: 50px;\
-        \}\
-        input, button \{\
-            padding: 10px;\
-            margin: 10px;\
-        \}\
-    </style>\
+  <meta charset="UTF-8">\
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">\
+  <title>Protected Link Access</title>\
+  <style>\
+    body \{\
+      font-family: 'Montserrat', sans-serif;\
+      display: flex;\
+      justify-content: center;\
+      align-items: center;\
+      height: 100vh;\
+      background-color: #f7f7f7;\
+      margin: 0;\
+    \}\
+    .container \{\
+      background-color: white;\
+      padding: 30px;\
+      border-radius: 8px;\
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);\
+      width: 100%;\
+      max-width: 400px;\
+    \}\
+    h1 \{\
+      font-size: 28px;\
+      font-weight: bold;\
+      color: #333;\
+      margin-bottom: 15px;\
+      text-align: center;\
+    \}\
+    p \{\
+      font-size: 16px;\
+      color: #666;\
+      text-align: center;\
+      margin-bottom: 20px;\
+    \}\
+    input[type="email"], input[type="text"] \{\
+      width: 100%;\
+      padding: 10px;\
+      margin: 10px 0;\
+      border: 1px solid #ddd;\
+      border-radius: 4px;\
+      font-size: 16px;\
+    \}\
+    button \{\
+      width: 100%;\
+      padding: 12px;\
+      background-color: #007bff;\
+      color: white;\
+      border: none;\
+      border-radius: 4px;\
+      font-size: 16px;\
+      cursor: pointer;\
+      transition: background-color 0.3s;\
+    \}\
+    button:hover \{\
+      background-color: #0056b3;\
+    \}\
+    .error \{\
+      color: red;\
+      font-size: 14px;\
+      text-align: center;\
+    \}\
+  </style>\
 </head>\
 <body>\
 \
-    <h2>Enter Access Code</h2>\
-    <input type="text" id="accessCode" placeholder="Enter your code">\
-    <button onclick="checkAccess()">Submit</button>\
+<div class="container">\
+  <h1>This link is protected</h1>\
+  <p>Please enter your email and a code will be sent to your email. Enter the code below.</p>\
+\
+  <form id="accessForm">\
+    <input type="email" id="email" placeholder="Enter your email" required />\
+    <input type="text" id="code" placeholder="Enter verification code" required />\
+    <button type="submit">Access Link</button>\
+  </form>\
+\
+  <div class="error" id="error-message"></div>\
+</div>\
+\
+<script>\
+  // Backend endpoint for verification\
+  const API_URL = 'https://your-backend-api.com/verify'; // Change this to your backend API\
+\
+  document.getElementById('accessForm').addEventListener('submit', async (event) => \{\
+    event.preventDefault();\
+\
+    const email = document.getElementById('email').value;\
+    const code = document.getElementById('code').value;\
     \
-    <p id="message"></p>\
+    // Reset error message\
+    document.getElementById('error-message').innerText = '';\
 \
-    <script>\
-        function checkAccess() \{\
-            var code = document.getElementById("accessCode").value;\
-            var url = "
-\f1 \expnd0\expndtw0\kerning0
-\outl0\strokewidth0 \strokec2 https://script.google.com/macros/s/AKfycbwY9CNVOqHiFDXgHKoSof5MiOrFFEeIdA8o86tJw3mUZw3dVws1U3pk_72k8Cr6PdaF/exec\
-
-\f0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 " + "?code=" + encodeURIComponent(code);\
+    try \{\
+      const response = await fetch(API_URL, \{\
+        method: 'POST',\
+        headers: \{\
+          'Content-Type': 'application/json',\
+        \},\
+        body: JSON.stringify(\{ email, code \}),\
+      \});\
 \
-            fetch(url)\
-                .then(response => response.json())\
-                .then(data => \{\
-                    if (data.valid) \{\
-                        document.getElementById("message").innerHTML = "Access granted!";\
-                        // Redirect or load new content\
-                        window.location.href = "https://github.com/Dataone4/Offer-Calculator-.git"; \
-                    \} else \{\
-                        document.getElementById("message").innerHTML = "Invalid code. Try again.";\
-                    \}\
-                \})\
-                .catch(error => console.error("Error:", error));\
-        \}\
-    </script>\
+      const result = await response.json();\
+\
+      if (result.success) \{\
+        // Redirect to the target link or display a success message\
+        window.location.href = result.redirectUrl || '/success';\
+      \} else \{\
+        // Display error message from backend\
+        document.getElementById('error-message').innerText = result.error || 'Something went wrong';\
+      \}\
+    \} catch (error) \{\
+      console.error('Error:', error);\
+      document.getElementById('error-message').innerText = 'Failed to verify. Please try again later.';\
+    \}\
+  \});\
+</script>\
 \
 </body>\
 </html>\
