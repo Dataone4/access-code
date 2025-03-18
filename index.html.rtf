@@ -8,118 +8,210 @@
 \f0\fs24 \cf0 <!DOCTYPE html>\
 <html lang="en">\
 <head>\
-    <meta charset="UTF-8">\
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">\
-    <title>Verification Page</title>\
-    <!-- Link to the external style.css file -->\
-    <link rel="stylesheet" href="style.css">\
-    <!-- Link to Google Fonts for Montserrat -->\
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">\
+  <meta charset="UTF-8">\
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">\
+  <title>Email Verification</title>\
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">\
+  <style>\
+    :root \{\
+      --primary: #271b0c; /* brown color */\
+      --primary-hover: #b02125; /* dark brown hover */\
+      --background: #f0f0f0; /* light grey background */\
+      --card-bg: #ffffff; /* white background for card */\
+      --text: #271b0c; /* brown text */\
+      --border-radius: 12px;\
+    \}\
+\
+    * \{\
+      box-sizing: border-box;\
+      margin: 0;\
+      padding: 0;\
+    \}\
+\
+    body \{\
+      font-family: 'Montserrat', sans-serif;\
+      background: var(--background);\
+      color: var(--text);\
+      padding: 20px;\
+      line-height: 1.6;\
+      min-height: 100vh;\
+      display: flex;\
+      align-items: center;\
+      justify-content: center;\
+    \}\
+\
+    .verification-container \{\
+      width: 100%;\
+      max-width: 500px;\
+      background: var(--card-bg);\
+      padding: 30px;\
+      border-radius: var(--border-radius);\
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);\
+    \}\
+\
+    h2 \{\
+      margin-bottom: 20px;\
+      color: var(--primary);\
+      text-align: center;\
+    \}\
+\
+    .input-group \{\
+      margin-bottom: 20px;\
+    \}\
+\
+    label \{\
+      display: block;\
+      margin-bottom: 8px;\
+      font-weight: 500;\
+    \}\
+\
+    input[type="email"], input[type="text"] \{\
+      width: 100%;\
+      padding: 10px;\
+      border: 1px solid #ddd;\
+      border-radius: 6px;\
+      font-family: inherit;\
+      margin-bottom: 15px;\
+    \}\
+\
+    .button \{\
+      display: block;\
+      width: 100%;\
+      padding: 12px 20px;\
+      background-color: var(--primary);\
+      color: #fff;\
+      border: none;\
+      border-radius: 30px;\
+      cursor: pointer;\
+      transition: background-color 0.3s ease;\
+      font-family: inherit;\
+      font-weight: 600;\
+      font-size: 16px;\
+      margin: 20px 0;\
+    \}\
+\
+    .button:hover \{\
+      background-color: var(--primary-hover);\
+    \}\
+\
+    .result \{\
+      background-color: #f5f5f5;\
+      padding: 15px;\
+      border-radius: 8px;\
+      margin-top: 20px;\
+      display: none;\
+    \}\
+\
+    .result.active \{\
+      display: block;\
+    \}\
+\
+    .result-value \{\
+      font-size: 24px;\
+      font-weight: 600;\
+      color: var(--primary);\
+      margin: 10px 0;\
+    \}\
+\
+    @media (max-width: 600px) \{\
+      .verification-container \{\
+        padding: 20px;\
+      \}\
+    \}\
+  </style>\
 </head>\
 <body>\
-    <div class="container">\
-        <h1>This link is protected</h1>\
-        <h2>Please enter your email and a code will be sent to your email. Enter the code below.</h2>\
-\
-        <div class="form-container">\
-            <!-- Email input form -->\
-            <form id="email-form">\
-                <input type="email" id="email" placeholder="Enter your email" required>\
-                <button type="submit">Request Code</button> <!-- Button to request the code -->\
-            </form>\
-\
-            <!-- Code input form (hidden initially) -->\
-            <form id="code-form" style="display: none;">\
-                <input type="text" id="code" placeholder="Enter the code" required>\
-                <button type="submit">Verify Code</button> <!-- Button to verify the code -->\
-            </form>\
-\
-            <!-- Final access button (hidden initially) -->\
-            <div id="access-button-container" style="display: none;">\
-                <button id="access-button">Get Access</button> <!-- Button to get access after code verification -->\
-            </div>\
-        </div>\
+  <div class="verification-container">\
+    <h2>Email Verification</h2>\
+    \
+    <div class="input-group">\
+      <label for="email">Enter your email:</label>\
+      <input \
+        type="email" \
+        id="email" \
+        placeholder="Enter your email"\
+      >\
     </div>\
 \
-    <script>\
-        const emailForm = document.getElementById('email-form');\
-        const codeForm = document.getElementById('code-form');\
-        const accessButtonContainer = document.getElementById('access-button-container');\
-        const emailInput = document.getElementById('email');\
-        const codeInput = document.getElementById('code');\
+    <button class="button" id="requestCodeBtn">Request Code</button>\
 \
-        // Handle email form submission\
-        emailForm.addEventListener('submit', async (e) => \{\
-            e.preventDefault();\
+    <div class="input-group">\
+      <label for="code">Enter the code:</label>\
+      <input \
+        type="text" \
+        id="code" \
+        placeholder="Enter verification code"\
+      >\
+    </div>\
 \
-            const email = emailInput.value;\
-            if (!email) \{\
-                alert('Please enter a valid email address');\
-                return;\
-            \}\
+    <button class="button" id="verifyCodeBtn">Verify Code</button>\
 \
-            try \{\
-                // Send email to backend for code generation (using Resend API)\
-                const response = await fetch('/api/send-verification-email', \{\
-                    method: 'POST',\
-                    headers: \{\
-                        'Content-Type': 'application/json',\
-                    \},\
-                    body: JSON.stringify(\{ email \})\
-                \});\
+    <div class="result" id="resultContainer">\
+      <h3>Verification Status</h3>\
+      <div class="result-value" id="resultMessage"></div>\
+    </div>\
+  </div>\
 \
-                if (response.ok) \{\
-                    alert('Verification code sent! Please check your email.');\
-                    emailForm.style.display = 'none';\
-                    codeForm.style.display = 'block';\
-                \} else \{\
-                    alert('Failed to send verification code. Please try again.');\
-                \}\
-            \} catch (error) \{\
-                console.error(error);\
-                alert('An error occurred. Please try again later.');\
-            \}\
-        \});\
+  <script>\
+    const emailInput = document.getElementById('email');\
+    const codeInput = document.getElementById('code');\
+    const requestCodeBtn = document.getElementById('requestCodeBtn');\
+    const verifyCodeBtn = document.getElementById('verifyCodeBtn');\
+    const resultContainer = document.getElementById('resultContainer');\
+    const resultMessage = document.getElementById('resultMessage');\
 \
-        // Handle code form submission\
-        codeForm.addEventListener('submit', async (e) => \{\
-            e.preventDefault();\
+    requestCodeBtn.addEventListener('click', () => \{\
+      const email = emailInput.value;\
+      if (!email) \{\
+        alert("Please enter a valid email.");\
+        return;\
+      \}\
+      \
+      fetch('/api/send-verification-email', \{\
+        method: 'POST',\
+        headers: \{\
+          'Content-Type': 'application/json'\
+        \},\
+        body: JSON.stringify(\{ email: email \})\
+      \})\
+      .then(response => response.json())\
+      .then(data => \{\
+        if (data.success) \{\
+          alert('Verification code sent to your email.');\
+        \} else \{\
+          alert('Failed to send verification code. Please try again.');\
+        \}\
+      \});\
+    \});\
 \
-            const code = codeInput.value;\
-            if (!code) \{\
-                alert('Please enter the code');\
-                return;\
-            \}\
+    verifyCodeBtn.addEventListener('click', () => \{\
+      const email = emailInput.value;\
+      const code = codeInput.value;\
 \
-            try \{\
-                // Send the code for verification (you can add further backend verification logic here)\
-                const response = await fetch('/api/verify-code', \{\
-                    method: 'POST',\
-                    headers: \{\
-                        'Content-Type': 'application/json',\
-                    \},\
-                    body: JSON.stringify(\{ code \})\
-                \});\
+      if (!email || !code) \{\
+        alert("Please enter both email and code.");\
+        return;\
+      \}\
 \
-                if (response.ok) \{\
-                    alert('Code verified successfully!');\
-                    codeForm.style.display = 'none';\
-                    accessButtonContainer.style.display = 'block'; // Show "Get Access" button\
-                \} else \{\
-                    alert('Invalid code. Please try again.');\
-                \}\
-            \} catch (error) \{\
-                console.error(error);\
-                alert('An error occurred. Please try again later.');\
-            \}\
-        \});\
-\
-        // Handle access button click\
-        document.getElementById('access-button').addEventListener('click', () => \{\
-            alert('You now have access!');\
-            // Optionally, redirect to the desired page after gaining access\
-        \});\
-    </script>\
+      fetch('/api/verify-code', \{\
+        method: 'POST',\
+        headers: \{\
+          'Content-Type': 'application/json'\
+        \},\
+        body: JSON.stringify(\{ email: email, code: code \})\
+      \})\
+      .then(response => response.json())\
+      .then(data => \{\
+        if (data.success) \{\
+          resultMessage.textContent = "Verification successful!";\
+          resultContainer.classList.add('active');\
+        \} else \{\
+          resultMessage.textContent = "Invalid code. Please try again.";\
+          resultContainer.classList.add('active');\
+        \}\
+      \});\
+    \});\
+  </script>\
 </body>\
 </html>\
 }
